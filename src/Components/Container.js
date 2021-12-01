@@ -9,7 +9,6 @@ import * as cityData from './cities.json'
 import {setWeatherData, setForecastData} from '../redux/weatherDataSlice'
 import WeatherCard from './Card/WeatherCard'
 
-/* ${process.env.REACT_APP_API_KEY} */
 
 function Container() {
     const dispatch = useDispatch();
@@ -18,12 +17,12 @@ function Container() {
 
     useEffect(()=>{
         async function getData(){
-            await axios(`http://api.openweathermap.org/data/2.5/weather?q=${currentSelected}&appid=aea83b8409454ade4f73c1048f28a4cc&units=metric`).then(res=>dispatch(setWeatherData(res.data)))
+            await axios(`http://api.openweathermap.org/data/2.5/weather?q=${currentSelected}&appid=${process.env.REACT_APP_API_KEY}`).then(res=>dispatch(setWeatherData(res.data)))
             
             var index = cityData['default'].findIndex(p=> p.name === currentSelected);
             var lat = cityData['default'][index].latitude
             var lon = cityData['default'][index].longitude
-            await axios(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&appid=aea83b8409454ade4f73c1048f28a4cc&units=metric`).then(res=>dispatch(setForecastData(res.data)))
+            await axios(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&appid=${process.env.REACT_APP_API_KEY}&units=metric`).then(res=>dispatch(setForecastData(res.data)))
         }
         getData();
     },[currentSelected])
